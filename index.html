@@ -1,0 +1,1758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TravelSmart - Discover Incredible India</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #F5F7FA;
+            min-height: 100vh;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: #FFFFFF;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1E3A5F;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #4A5568;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            background: #F5F7FA;
+            color: #3B9B99;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            font-size: 0.95rem;
+            display: inline-block;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1.5px solid #1E3A5F;
+            color: #1E3A5F;
+        }
+
+        .btn-outline:hover {
+            background: #1E3A5F;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(30, 58, 95, 0.2);
+        }
+
+        .btn-primary {
+            background: #3B9B99;
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: #2B7A78;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 155, 153, 0.3);
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-name {
+            color: #4A5568;
+            font-weight: 500;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section {
+            display: none;
+        }
+
+        /* Server-side active logic handled via Jinja2 if/else, OR JS toggling */
+        .section.active {
+            display: block;
+        }
+
+        /* Flash Messages */
+        .flash-messages {
+            margin-bottom: 1.5rem;
+        }
+
+        .flash {
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 0.75rem;
+            font-weight: 500;
+        }
+
+        .flash-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .flash-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .flash-info {
+            background: #cce5ff;
+            color: #004085;
+            border: 1px solid #b8daff;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(180deg, #EDF2F7 0%, #F5F7FA 100%);
+            border-radius: 0;
+            padding: 4rem 2rem;
+            text-align: center;
+            margin: -2rem -2rem 2rem -2rem;
+        }
+
+        .hero-title-accent {
+            color: #1E3A5F;
+            font-size: 3.5rem;
+            font-weight: 700;
+        }
+
+        .hero-title-main {
+            color: #1E3A5F;
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            color: #4A5568;
+        }
+
+        .search-container {
+            max-width: 600px;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            gap: 0;
+            background: #FFFFFF;
+            border-radius: 50px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            padding: 0.5rem;
+            align-items: center;
+        }
+
+        .search-icon {
+            padding: 0 1rem;
+            color: #9CA3AF;
+            font-size: 1.2rem;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 0.75rem 0;
+            border: none;
+            font-size: 1rem;
+            background: transparent;
+        }
+
+        .search-input:focus {
+            outline: none;
+        }
+
+        .search-btn {
+            padding: 0.75rem 1.5rem;
+            background: #3B9B99;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .search-btn:hover {
+            background: #2B7A78;
+        }
+
+        .quick-tags {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .quick-tag {
+            padding: 0.5rem 1rem;
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 20px;
+            color: #4A5568;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .quick-tag:hover {
+            border-color: #3B9B99;
+            color: #3B9B99;
+        }
+
+        /* Search Result */
+        .search-result {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .search-result-img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .search-result-content {
+            padding: 2rem;
+        }
+
+        .search-result h2 {
+            color: #1E3A5F;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .search-result-state {
+            color: #3B9B99;
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 0.75rem;
+        }
+
+        .search-result p {
+            color: #4A5568;
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        .source-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: #EDF2F7;
+            color: #3B9B99;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            margin-top: 1rem;
+        }
+
+        .search-result-map {
+            padding: 0 2rem 2rem;
+        }
+
+        .map-label {
+            color: #1E3A5F;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .result-map-iframe {
+            width: 100%;
+            height: 300px;
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Section Title */
+        .section-title {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .section-title h2 {
+            color: #1E3A5F;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .section-title p {
+            color: #6B7280;
+            font-size: 1rem;
+        }
+
+        /* Booking Cards */
+        .booking-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .booking-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .booking-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .booking-card-icon {
+            width: 56px;
+            height: 56px;
+            background: #EDF2F7;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.25rem;
+            font-size: 1.5rem;
+            color: #3B9B99;
+        }
+
+        .booking-card h3 {
+            color: #1E3A5F;
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+
+        .booking-card p {
+            color: #6B7280;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .booking-card .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            width: 100%;
+        }
+
+        /* Why Section */
+        .why-section {
+            background: #EDF2F7;
+            margin: 0 -2rem;
+            padding: 3rem 2rem;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .feature {
+            background: transparent;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: #FFFFFF;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.5rem;
+        }
+
+        .feature h4 {
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+            color: #1E3A5F;
+            font-weight: 600;
+        }
+
+        .feature p {
+            color: #6B7280;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* Page Header */
+        .page-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .page-header h1 {
+            color: #1E3A5F;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header p {
+            color: #6B7280;
+            font-size: 1.1rem;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+
+        .filter-section label {
+            color: #1E3A5F;
+            font-weight: 600;
+            margin-right: 1rem;
+        }
+
+        .filter-section select {
+            padding: 0.75rem 1.5rem;
+            border: 1.5px solid #E2E8F0;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            min-width: 200px;
+        }
+
+        .filter-section select:focus {
+            outline: none;
+            border-color: #3B9B99;
+        }
+
+        /* Destinations Grid */
+        .destinations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .destination-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .destination-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .destination-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .destination-card:hover .destination-img {
+            transform: scale(1.05);
+        }
+
+        .destination-img-wrapper {
+            overflow: hidden;
+        }
+
+        .destination-content {
+            padding: 1.5rem;
+        }
+
+        .destination-content h3 {
+            color: #1E3A5F;
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .destination-state {
+            color: #3B9B99;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 0.75rem;
+        }
+
+        .destination-content p {
+            color: #6B7280;
+            line-height: 1.6;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+
+        .destination-source {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: #EDF2F7;
+            color: #3B9B99;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .map-wrapper {
+            padding: 0 1.5rem 1.5rem;
+        }
+
+        .destination-map {
+            width: 100%;
+            height: 200px;
+            border: none;
+            border-radius: 8px;
+            margin-top: 0.5rem;
+        }
+
+        /* Experiences Grid */
+        .experiences-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .experience-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .experience-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .experience-img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+
+        .experience-content {
+            padding: 1.75rem;
+        }
+
+        .experience-category {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: #3B9B99;
+            color: white;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .experience-content h3 {
+            color: #1E3A5F;
+            font-size: 1.3rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .experience-content p {
+            color: #6B7280;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .experience-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid #E2E8F0;
+        }
+
+        .experience-duration {
+            color: #9CA3AF;
+            font-size: 0.9rem;
+        }
+
+        .experience-price {
+            color: #3B9B99;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        /* Bookings Container */
+        .bookings-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .booking-form-card,
+        .bookings-list-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+
+        .booking-form-card h2,
+        .bookings-list-card h2 {
+            color: #1E3A5F;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #1E3A5F;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1.5px solid #E2E8F0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #FFFFFF;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3B9B99;
+            box-shadow: 0 0 0 3px rgba(59, 155, 153, 0.1);
+        }
+
+        .booking-item {
+            background: #F5F7FA;
+            border-radius: 10px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #3B9B99;
+            transition: all 0.3s ease;
+        }
+
+        .booking-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .booking-type {
+            display: inline-block;
+            padding: 0.25rem 0.6rem;
+            background: #3B9B99;
+            color: white;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .booking-destination {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #1E3A5F;
+            margin-bottom: 0.25rem;
+        }
+
+        .booking-date {
+            color: #6B7280;
+            font-size: 0.9rem;
+        }
+
+        .booking-id {
+            color: #9CA3AF;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+        }
+
+        .points-info {
+            background: #3B9B99;
+            color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .points-info span {
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .no-bookings,
+        .no-data {
+            text-align: center;
+            padding: 2rem;
+            color: #6B7280;
+        }
+
+        /* Rewards */
+        .rewards-container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .rewards-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+
+        .rewards-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #3B9B99, #2B7A78);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2.5rem;
+            color: white;
+        }
+
+        .level-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: linear-gradient(135deg, #3B9B99, #2B7A78);
+            color: white;
+            border-radius: 25px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .points-display {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #1E3A5F;
+            margin-bottom: 0.5rem;
+        }
+
+        .points-label {
+            color: #6B7280;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        .progress-section {
+            background: #F5F7FA;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            color: #4A5568;
+            font-weight: 500;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: #E2E8F0;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3B9B99, #2B7A78);
+            border-radius: 6px;
+            transition: width 0.5s ease;
+        }
+
+        .levels-overview {
+            text-align: left;
+        }
+
+        .levels-overview h3 {
+            color: #1E3A5F;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .level-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #E2E8F0;
+        }
+
+        .level-item:last-child {
+            border-bottom: none;
+        }
+
+        .level-item.current {
+            background: #EDF2F7;
+            margin: 0 -1.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+        }
+
+        .level-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .level-info {
+            flex: 1;
+        }
+
+        .level-name {
+            font-weight: 600;
+            color: #1E3A5F;
+        }
+
+        .level-points {
+            font-size: 0.85rem;
+            color: #6B7280;
+        }
+
+        /* Auth Forms */
+        .auth-container {
+            max-width: 450px;
+            margin: 2rem auto;
+        }
+
+        .auth-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .auth-card h1 {
+            color: #1E3A5F;
+            text-align: center;
+            margin-bottom: 0.5rem;
+            font-size: 2rem;
+        }
+
+        .auth-card .subtitle {
+            color: #6B7280;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .auth-switch {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #6B7280;
+        }
+
+        .auth-switch a {
+            color: #3B9B99;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .auth-switch a:hover {
+            text-decoration: underline;
+        }
+
+        /* Admin */
+        .admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .admin-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+
+        .admin-card h2 {
+            color: #1E3A5F;
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .admin-item {
+            background: #F5F7FA;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .admin-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .admin-item-title {
+            font-weight: 600;
+            color: #1E3A5F;
+            margin-bottom: 0.25rem;
+        }
+
+        .admin-item-meta {
+            font-size: 0.85rem;
+            color: #6B7280;
+        }
+
+        .admin-badge {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            background: #e74c3c;
+            color: white;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        /* Footer */
+        .footer {
+            background: white;
+            padding: 2rem;
+            text-align: center;
+            margin-top: 3rem;
+            border-top: 1px solid #E2E8F0;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-logo span {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1E3A5F;
+        }
+
+        .footer p {
+            color: #6B7280;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero-title-accent {
+                font-size: 2rem;
+            }
+
+            .hero-title-main {
+                font-size: 2.5rem;
+            }
+
+            .search-container {
+                flex-direction: column;
+                border-radius: 16px;
+                padding: 1rem;
+            }
+
+            .search-input {
+                width: 100%;
+                text-align: center;
+            }
+
+            .search-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .bookings-container {
+                grid-template-columns: 1fr;
+            }
+
+            .destinations-grid,
+            .experiences-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .hero {
+                margin: -1rem -1rem 1rem -1rem;
+                padding: 2rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a class="logo" onclick="showSection('home')">
+            <div class="logo-icon">
+                <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/02e7777ec_TravelSmartlogo.png" 
+                     alt="Logo" 
+                     style="width:30px; height:30px; object-fit:contain;" />
+            </div>
+            TravelSmart
+        </a>
+        <div class="nav-links">
+            <a onclick="showSection('home')" id="nav-home" class="{{ 'active' if section == 'home' else '' }}">Home</a>
+            <a onclick="showSection('destinations')" id="nav-destinations" class="{{ 'active' if section == 'destinations' else '' }}">Destinations</a>
+            <a onclick="showSection('experiences')" id="nav-experiences" class="{{ 'active' if section == 'experiences' else '' }}">Experiences</a>
+            {% if current_user %}
+            <a onclick="showSection('bookings')" id="nav-bookings" class="{{ 'active' if section == 'bookings' else '' }}">My Bookings</a>
+            <a onclick="showSection('rewards')" id="nav-rewards" class="{{ 'active' if section == 'rewards' else '' }}">Rewards</a>
+            {% endif %}
+            {% if current_user and current_user.is_admin %}
+            <a onclick="showSection('admin')" id="nav-admin" class="{{ 'active' if section == 'admin' else '' }}">Admin</a>
+            {% endif %}
+        </div>
+        <div class="auth-buttons">
+            {% if current_user %}
+            <div class="user-info">
+                <span class="user-name">Welcome, {{ current_user.name }}</span>
+                <a href="{{ url_for('logout') }}" class="btn btn-outline">Sign Out</a>
+            </div>
+            {% else %}
+            <a onclick="showSection('login')" class="btn btn-outline">Sign In</a>
+            <a onclick="showSection('signup')" class="btn btn-primary">Sign Up</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <main class="main-content">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="flash-messages">
+            {% for category, message in messages %}
+            <div class="flash flash-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        <section id="section-home" class="section {{ 'active' if section == 'home' else '' }}">
+            <div class="hero">
+                <h1 class="hero-title-accent">Discover</h1>
+                <h1 class="hero-title-main">Incredible India</h1>
+                <p>From the majestic Himalayas to pristine beaches, embark on unforgettable journeys across India's most beautiful destinations</p>
+                
+                <form action="{{ url_for('index') }}" method="GET" class="search-container">
+                    <span class="search-icon">📍</span>
+                    <input type="text" name="search" class="search-input" placeholder="Search destinations (e.g., Goa, Jaipur, Kerala...)" value="{{ search_query }}">
+                    <button type="submit" class="search-btn">
+                        <span>🔍</span> Search
+                    </button>
+                </form>
+
+                <div class="quick-tags">
+                    <a href="{{ url_for('index', search='Goa') }}" class="quick-tag">Goa</a>
+                    <a href="{{ url_for('index', search='Jaipur') }}" class="quick-tag">Jaipur</a>
+                    <a href="{{ url_for('index', search='Kerala') }}" class="quick-tag">Kerala</a>
+                    <a href="{{ url_for('index', search='Manali') }}" class="quick-tag">Manali</a>
+                    <a href="{{ url_for('index', search='Delhi') }}" class="quick-tag">Delhi</a>
+                    <a href="{{ url_for('index', search='Udaipur') }}" class="quick-tag">Udaipur</a>
+                </div>
+            </div>
+
+            {% if search_result %}
+            <div class="search-result">
+                <img src="{{ search_result.image_url }}" alt="{{ search_result.name }}" class="search-result-img">
+                <div class="search-result-content">
+                    <h2>{{ search_result.name }}</h2>
+                    {% if search_result.state %}
+                    <p class="search-result-state">{{ search_result.state }}</p>
+                    {% endif %}
+                    <p>{{ search_result.description }}</p>
+                    <span class="source-badge">Source: {{ search_result.source|capitalize }}</span>
+                </div>
+                <div class="search-result-map">
+                    <p class="map-label"><span>📍</span> Location on Map</p>
+                    <iframe class="result-map-iframe" 
+                        src="https://maps.google.com/maps?q={{ search_result.name }}{% if search_result.state %}, {{ search_result.state }}{% endif %}, India&output=embed"
+                        allowfullscreen loading="lazy"></iframe>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="section-title">
+                <h2>Plan Your Perfect Trip</h2>
+                <p>Book everything you need for your journey in just a few clicks</p>
+            </div>
+
+            <div class="booking-cards">
+                <div class="booking-card">
+                    <div class="booking-card-icon">🚆</div>
+                    <h3>Train Booking</h3>
+                    <p>Book comfortable train journeys across India with confirmed seats and real-time tracking</p>
+                    <a href="https://www.confirmtkt.com/rbooking/" target="_blank" class="btn btn-primary">Book Now ↗</a>
+                </div>
+                <div class="booking-card">
+                    <div class="booking-card-icon">🚌</div>
+                    <h3>Bus Booking</h3>
+                    <p>Travel by bus with multiple operators, flexible timings and comfortable seating options</p>
+                    <a href="https://www.redbus.in/" target="_blank" class="btn btn-primary">Book Now ↗</a>
+                </div>
+                <div class="booking-card">
+                    <div class="booking-card-icon">🏨</div>
+                    <h3>Hotel Booking</h3>
+                    <p>Find and book the perfect accommodation from budget stays to luxury resorts</p>
+                    <a href="https://www.makemytrip.com/hotels/hotel-listing/" target="_blank" class="btn btn-primary">Book Now ↗</a>
+                </div>
+            </div>
+
+            <div class="why-section">
+                <div class="section-title">
+                    <h2>Why Choose TravelSmart?</h2>
+                </div>
+                <div class="features">
+                    <div class="feature">
+                        <div class="feature-icon">🤖</div>
+                        <h4>AI Travel Assistant</h4>
+                        <p>Get personalized recommendations and instant answers to all your travel questions</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">⚡</div>
+                        <h4>Quick Booking</h4>
+                        <p>Seamlessly book accommodations and activities with instant confirmation</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">🗺</div>
+                        <h4>Smart Planning</h4>
+                        <p>Create custom itineraries and discover hidden gems across India</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="section-destinations" class="section {{ 'active' if section == 'destinations' else '' }}">
+            <div class="page-header">
+                <h1>Explore Destinations</h1>
+                <p>Discover amazing places across India</p>
+            </div>
+
+            <div class="filter-section">
+                <label for="state-filter">Filter by State:</label>
+                <select id="state-filter" onchange="filterDestinations()">
+                    <option value="">All States</option>
+                    {% for state in states %}
+                    <option value="{{ state }}">{{ state }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="destinations-grid" id="destinations-grid">
+                {% for key, dest in destinations.items() %}
+                <div class="destination-card" data-state="{{ dest.state }}">
+                    <div class="destination-img-wrapper">
+                        <img src="{{ dest.image_url }}" alt="{{ dest.name }}" class="destination-img">
+                    </div>
+                    <div class="destination-content">
+                        <h3>{{ dest.name }}</h3>
+                        <p class="destination-state">{{ dest.state }}</p>
+                        <p>{{ dest.description }}</p>
+                        <span class="destination-source">{{ dest.source|capitalize }}</span>
+                    </div>
+                    <div class="map-wrapper">
+                        <iframe class="destination-map" 
+                            src="https://maps.google.com/maps?q={{ dest.name }}, {{ dest.state }}, India&output=embed"
+                            allowfullscreen loading="lazy"></iframe>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section id="section-experiences" class="section {{ 'active' if section == 'experiences' else '' }}">
+            <div class="page-header">
+                <h1>Curated Experiences</h1>
+                <p>Handpicked adventures and activities for every traveler</p>
+            </div>
+
+            <div class="experiences-grid">
+                <div class="experience-card">
+                    <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600" alt="Himalayan Trek" class="experience-img">
+                    <div class="experience-content">
+                        <span class="experience-category">Adventure</span>
+                        <h3>Himalayan Trek to Valley of Flowers</h3>
+                        <p>Embark on a breathtaking journey through UNESCO World Heritage alpine meadows with expert guides.</p>
+                        <div class="experience-meta">
+                            <span class="experience-duration">7 Days</span>
+                            <span class="experience-price">₹25,000</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="experience-card">
+                    <img src="https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=600" alt="Kerala Backwaters" class="experience-img">
+                    <div class="experience-content">
+                        <span class="experience-category">Relaxation</span>
+                        <h3>Kerala Backwater Houseboat Stay</h3>
+                        <p>Cruise through serene backwaters on a traditional houseboat with authentic Kerala cuisine.</p>
+                        <div class="experience-meta">
+                            <span class="experience-duration">3 Days</span>
+                            <span class="experience-price">₹15,000</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="experience-card">
+                    <img src="https://images.unsplash.com/photo-1477587458883-47145ed94245?w=600" alt="Rajasthan Heritage" class="experience-img">
+                    <div class="experience-content">
+                        <span class="experience-category">Heritage</span>
+                        <h3>Royal Rajasthan Heritage Tour</h3>
+                        <p>Experience royal palaces, majestic forts and vibrant culture of the land of kings.</p>
+                        <div class="experience-meta">
+                            <span class="experience-duration">10 Days</span>
+                            <span class="experience-price">₹45,000</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="experience-card">
+                    <img src="https://images.unsplash.com/photo-1549366021-9f761d450615?w=600" alt="Wildlife Safari" class="experience-img">
+                    <div class="experience-content">
+                        <span class="experience-category">Wildlife</span>
+                        <h3>Jim Corbett Tiger Safari</h3>
+                        <p>Track Royal Bengal Tigers in India's oldest national park with experienced naturalists.</p>
+                        <div class="experience-meta">
+                            <span class="experience-duration">4 Days</span>
+                            <span class="experience-price">₹20,000</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="experience-card">
+                    <img src="https://images.unsplash.com/photo-1561361513-2d000a50f0dc?w=600" alt="Varanasi Spiritual" class="experience-img">
+                    <div class="experience-content">
+                        <span class="experience-category">Spiritual</span>
+                        <h3>Varanasi Spiritual Journey</h3>
+                        <p>Experience ancient rituals, evening Ganga Aarti and spiritual awakening in the holiest city.</p>
+                        <div class="experience-meta">
+                            <span class="experience-duration">5 Days</span>
+                            <span class="experience-price">₹18,000</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="experience-card">
+                    <img src="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=600" alt="Goa Beach" class="experience-img">
+                    <div class="experience-content">
+                        <span class="experience-category">Beach</span>
+                        <h3>Goa Beach & Culture Experience</h3>
+                        <p>Sun, sand, Portuguese heritage, water sports and vibrant nightlife in tropical paradise.</p>
+                        <div class="experience-meta">
+                            <span class="experience-duration">6 Days</span>
+                            <span class="experience-price">₹22,000</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="section-bookings" class="section {{ 'active' if section == 'bookings' else '' }}">
+            <div class="page-header">
+                <h1>My Bookings</h1>
+                <p>Manage your travel bookings and earn reward points</p>
+            </div>
+
+            <div class="bookings-container">
+                <div class="booking-form-card">
+                    <h2>Save New Booking</h2>
+                    <div class="points-info">
+                        Earn <span>50 points</span> for each booking saved!
+                    </div>
+                    <form action="{{ url_for('save_booking') }}" method="POST">
+                        <div class="form-group">
+                            <label for="booking_type">Booking Type</label>
+                            <select name="booking_type" id="booking_type" required>
+                                <option value="">Select Type</option>
+                                <option value="Train">Train</option>
+                                <option value="Bus">Bus</option>
+                                <option value="Hotel">Hotel</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="destination">Destination</label>
+                            <input type="text" name="destination" id="destination" placeholder="Enter destination" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="travel_date">Travel Date</label>
+                            <input type="date" name="travel_date" id="travel_date" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Save Booking</button>
+                    </form>
+                </div>
+
+                <div class="bookings-list-card">
+                    <h2>Your Bookings</h2>
+                    {% if user_bookings %}
+                        {% for booking in user_bookings %}
+                        <div class="booking-item">
+                            <span class="booking-type">{{ booking.booking_type }}</span>
+                            <p class="booking-destination">{{ booking.destination }}</p>
+                            <p class="booking-date">Travel Date: {{ booking.travel_date }}</p>
+                            <p class="booking-id">Booking ID: {{ booking.id }}</p>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                    <div class="no-bookings">
+                        <p>No bookings yet. Save your first booking to earn points!</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+
+        <section id="section-rewards" class="section {{ 'active' if section == 'rewards' else '' }}">
+            <div class="rewards-container">
+                <div class="rewards-card">
+                    <div class="rewards-icon">🏆</div>
+                    <span class="level-badge">{{ level_name }}</span>
+                    <div class="points-display">{{ points }}</div>
+                    <div class="points-label">Total Reward Points</div>
+
+                    {% if level_max %}
+                    <div class="progress-section">
+                        <div class="progress-label">
+                            <span>Progress to next level</span>
+                            <span>{{ points_to_next }} points to go</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: {{ progress }}%;"></div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="progress-section">
+                        <p style="color: #3B9B99; font-weight: 600;">Congratulations! You've reached the highest level!</p>
+                    </div>
+                    {% endif %}
+
+                    <div class="levels-overview">
+                        <h3>All Levels</h3>
+                        <div class="level-item {% if level_name == 'Newbie' %}current{% endif %}">
+                            <div class="level-icon" style="background: #E2E8F0;">🌱</div>
+                            <div class="level-info">
+                                <div class="level-name">Newbie</div>
+                                <div class="level-points">0 - 49 points</div>
+                            </div>
+                        </div>
+                        <div class="level-item {% if level_name == 'Rookie Traveler' %}current{% endif %}">
+                            <div class="level-icon" style="background: #C3DAFE;">🌳</div>
+                            <div class="level-info">
+                                <div class="level-name">Rookie Traveler</div>
+                                <div class="level-points">50 - 149 points</div>
+                            </div>
+                        </div>
+                        <div class="level-item {% if level_name == 'Frequent Explorer' %}current{% endif %}">
+                            <div class="level-icon" style="background: #A3BFFA;">🌴</div>
+                            <div class="level-info">
+                                <div class="level-name">Frequent Explorer</div>
+                                <div class="level-points">150 - 299 points</div>
+                            </div>
+                        </div>
+                        <div class="level-item {% if level_name == 'Globe Trotter' %}current{% endif %}">
+                            <div class="level-icon" style="background: linear-gradient(135deg, #3B9B99, #2B7A78); color: white;">🌍</div>
+                            <div class="level-info">
+                                <div class="level-name">Globe Trotter</div>
+                                <div class="level-points">300+ points</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="section-login" class="section {{ 'active' if section == 'login' else '' }}">
+            <div class="auth-container">
+                <div class="auth-card">
+                    <h1>Welcome Back</h1>
+                    <p class="subtitle">Sign in to your TravelSmart account</p>
+                    
+                    <div class="social-login-container" style="margin-bottom: 1.5rem; text-align: center;">
+                        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                        </div>
+                        
+                    </div>
+                    <form action="{{ url_for('login') }}" method="POST">
+                        <div class="form-group">
+                            <label for="login-email">Email</label>
+                            <input type="email" name="email" id="login-email" placeholder="Enter your email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="login-password">Password</label>
+                            <input type="password" name="password" id="login-password" placeholder="Enter your password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Sign In</button>
+                    </form>
+                    <p style="text-align: center; margin-top: 1rem;">
+                        <a onclick="showSection('forgot')" style="color: #3B9B99; text-decoration: none; cursor: pointer; font-size: 0.95rem; font-weight: 500;">Forgot Password?</a>
+                    </p>
+                    <p class="auth-switch">
+                        Don't have an account? <a onclick="showSection('signup')">Sign Up</a>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="section-forgot" class="section {{ 'active' if section == 'forgot' else '' }}">
+            <div class="auth-container">
+                <div class="auth-card">
+                    <h1>Password Reset</h1>
+                    <p class="subtitle">Enter your email to request a password reset link.</p>
+                    <form action="{{ url_for('forgot_password') }}" method="POST">
+                        <div class="form-group">
+                            <label for="forgot-email">Email Address</label>
+                            <input type="email" name="email" id="forgot-email" placeholder="Enter your registered email" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Send Reset Link</button>
+                    </form>
+                    <p class="auth-switch">
+                        Remembered it? <a onclick="showSection('login')">Sign In</a>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="section-reset" class="section {{ 'active' if section == 'reset' else '' }}">
+            <div class="auth-container">
+                <div class="auth-card">
+                    <h1>Set New Password</h1>
+                    <p class="subtitle">Enter and confirm your new password.</p>
+                    
+                    {% if token %}
+                    <form action="{{ url_for('reset_password', token=token) }}" method="POST">
+                        <div class="form-group">
+                            <label for="reset-password">New Password</label>
+                            <input type="password" name="password" id="reset-password" placeholder="Enter new password (min 6 characters)" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="reset-confirm">Confirm New Password</label>
+                            <input type="password" name="confirm_password" id="reset-confirm" placeholder="Confirm new password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Reset Password</button>
+                    </form>
+                    {% else %}
+                    <div class="flash flash-error">
+                        The reset link is **invalid or has expired**. Please request a new link from the login page.
+                    </div>
+                    {% endif %}
+
+                    <p class="auth-switch">
+                        <a onclick="showSection('login')">Cancel and Go to Login</a>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="section-signup" class="section {{ 'active' if section == 'signup' else '' }}">
+            <div class="auth-container">
+                <div class="auth-card">
+                    <h1>Create Account</h1>
+                    <p class="subtitle">Join TravelSmart and start exploring</p>
+                    <form action="{{ url_for('signup') }}" method="POST">
+                        <div class="form-group">
+                            <label for="signup-name">Full Name</label>
+                            <input type="text" name="name" id="signup-name" placeholder="Enter your name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="signup-email">Email</label>
+                            <input type="email" name="email" id="signup-email" placeholder="Enter your email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="signup-password">Password</label>
+                            <input type="password" name="password" id="signup-password" placeholder="Create a password (min 6 characters)" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="signup-confirm">Confirm Password</label>
+                            <input type="password" name="confirm_password" id="signup-confirm" placeholder="Confirm your password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Create Account</button>
+                    </form>
+                    <p class="auth-switch">
+                        Already have an account? <a onclick="showSection('login')">Sign In</a>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="section-admin" class="section {{ 'active' if section == 'admin' else '' }}">
+            <div class="page-header">
+                <h1>Admin Dashboard</h1>
+                <p>Manage users, bookings and destinations</p>
+            </div>
+
+            <div class="admin-grid">
+                <div class="admin-card">
+                    <h2>👥 Users ({{ users|length }})</h2>
+                    {% if users %}
+                        {% for email, user in users.items() %}
+                        <div class="admin-item">
+                            <p class="admin-item-title">
+                                {{ user.name }}
+                                {% if user.is_admin %}<span class="admin-badge">ADMIN</span>{% endif %}
+                            </p>
+                            <p class="admin-item-meta">{{ user.email }} | {{ user.reward_points }} points | Joined: {{ user.created_at }}</p>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                    <div class="no-data">No users registered yet.</div>
+                    {% endif %}
+                </div>
+
+                <div class="admin-card">
+                    <h2>📋 All Bookings ({{ all_bookings|length }})</h2>
+                    {% if all_bookings %}
+                        {% for booking in all_bookings %}
+                        <div class="admin-item">
+                            <p class="admin-item-title">{{ booking.destination }}</p>
+                            <p class="admin-item-meta">{{ booking.booking_type }} | {{ booking.user_email }} | {{ booking.travel_date }}</p>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                    <div class="no-data">No bookings yet.</div>
+                    {% endif %}
+                </div>
+
+                <div class="admin-card" style="grid-column: 1 / -1;">
+                    <h2>📍 Destinations ({{ destinations|length }})</h2>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem;">
+                        {% for key, dest in destinations.items() %}
+                        <div class="admin-item">
+                            <p class="admin-item-title">{{ dest.name }}</p>
+                            <p class="admin-item-meta">{{ dest.state }} | Source: {{ dest.source }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-logo">
+            <div class="logo-icon" style="width: 28px; height: 28px; font-size: 0.9rem;">✈</div>
+            <span>TravelSmart</span>
+        </div>
+        <p>Your gateway to incredible Indian destinations</p>
+        <p style="margin-top: 0.5rem;">© 2025 TravelSmart. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(function(section) {
+                section.classList.remove('active');
+            });
+            
+            // Show selected section
+            var section = document.getElementById('section-' + sectionName);
+            if (section) {
+                section.classList.add('active');
+            }
+            
+            // Update nav active state
+            document.querySelectorAll('.nav-links a').forEach(function(link) {
+                link.classList.remove('active');
+            });
+            var navLink = document.getElementById('nav-' + sectionName);
+            if (navLink) {
+                navLink.classList.add('active');
+            }
+
+            // Update URL without reload
+            if (history.pushState) {
+                var newUrl = window.location.pathname;
+                var params = new URLSearchParams(window.location.search);
+                
+                // Keep the search query if present, clear token
+                if (params.has('search')) {
+                    newUrl += '?search=' + params.get('search');
+                } else {
+                    newUrl += '?';
+                }
+
+                newUrl += (newUrl.indexOf('?') > -1 ? '&' : '?') + 'section=' + sectionName;
+                
+                // The main index page handles logic when a token is present, so we strip it out for simple section changes
+                newUrl = newUrl.replace(/&token=[^&]*/g, ''); 
+
+                history.pushState({section: sectionName}, '', newUrl);
+            }
+        }
+
+        function filterDestinations() {
+            var filter = document.getElementById('state-filter').value;
+            var cards = document.querySelectorAll('.destination-card');
+            
+            cards.forEach(function(card) {
+                if (!filter || card.getAttribute('data-state') === filter) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // NOTE: We don't strictly need to do anything here because the SERVER
+            // already added the 'active' class to the correct section via Jinja logic.
+            // However, we handle the 'token' case just to be safe if client-side logic is needed.
+            
+            var params = new URLSearchParams(window.location.search);
+            if (params.has('token')) {
+                showSection('reset'); // Fixed: Matches new ID section-reset
+            } 
+        });
+
+        // Handle browser back/forward
+        window.onpopstate = function(event) {
+            var params = new URLSearchParams(window.location.search);
+            if (params.has('token')) {
+                showSection('reset'); // Fixed: Matches new ID section-reset
+            } else if (event.state && event.state.section) {
+                showSection(event.state.section);
+            } else {
+                showSection('home');
+            }
+        };
+    </script>
+</body>
+</html>
