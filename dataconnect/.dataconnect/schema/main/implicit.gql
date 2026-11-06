@@ -1,0 +1,64 @@
+extend type Activity {
+  """
+  ✨ Implicit primary key field. It's a UUID column default to a generated new value. See `@table` for how to customize it.
+  """
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "Activity", purpose: IMPLICIT_KEY_FIELD)
+  """
+  ✨ Implicit foreign key field based on `Activity`.`trip`. It must match the value of `Trip`.`id`. See `@ref` for how to customize it.
+  """
+  tripId: UUID! @fdc_generated(from: "Activity.trip", purpose: IMPLICIT_REF_FIELD)
+}
+extend type Booking {
+  """
+  ✨ Implicit primary key field. It's a UUID column default to a generated new value. See `@table` for how to customize it.
+  """
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "Booking", purpose: IMPLICIT_KEY_FIELD)
+  """
+  ✨ Implicit foreign key field based on `Booking`.`trip`. It must match the value of `Trip`.`id`. See `@ref` for how to customize it.
+  """
+  tripId: UUID! @fdc_generated(from: "Booking.trip", purpose: IMPLICIT_REF_FIELD)
+}
+extend type Expense {
+  """
+  ✨ Implicit primary key field. It's a UUID column default to a generated new value. See `@table` for how to customize it.
+  """
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "Expense", purpose: IMPLICIT_KEY_FIELD)
+  """
+  ✨ Implicit foreign key field based on `Expense`.`payer`. It must match the value of `User`.`id`. See `@ref` for how to customize it.
+  """
+  payerId: UUID @fdc_generated(from: "Expense.payer", purpose: IMPLICIT_REF_FIELD)
+  """
+  ✨ Implicit foreign key field based on `Expense`.`trip`. It must match the value of `Trip`.`id`. See `@ref` for how to customize it.
+  """
+  tripId: UUID! @fdc_generated(from: "Expense.trip", purpose: IMPLICIT_REF_FIELD)
+}
+extend type Trip {
+  """
+  ✨ Implicit primary key field. It's a UUID column default to a generated new value. See `@table` for how to customize it.
+  """
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "Trip", purpose: IMPLICIT_KEY_FIELD)
+  """
+  ✨ Implicit foreign key field based on `Trip`.`owner`. It must match the value of `User`.`id`. See `@ref` for how to customize it.
+  """
+  ownerId: UUID! @fdc_generated(from: "Trip.owner", purpose: IMPLICIT_REF_FIELD)
+}
+extend type TripMember {
+  """
+  ✨ Implicit primary key field. It's a UUID column default to a generated new value. See `@table` for how to customize it.
+  """
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "TripMember", purpose: IMPLICIT_KEY_FIELD)
+  """
+  ✨ Implicit foreign key field based on `TripMember`.`trip`. It must match the value of `Trip`.`id`. See `@ref` for how to customize it.
+  """
+  tripId: UUID! @fdc_generated(from: "TripMember.trip", purpose: IMPLICIT_REF_FIELD)
+  """
+  ✨ Implicit foreign key field based on `TripMember`.`user`. It must match the value of `User`.`id`. See `@ref` for how to customize it.
+  """
+  userId: UUID! @fdc_generated(from: "TripMember.user", purpose: IMPLICIT_REF_FIELD)
+}
+extend type User {
+  """
+  ✨ Implicit primary key field. It's a UUID column default to a generated new value. See `@table` for how to customize it.
+  """
+  id: UUID! @default(expr: "uuidV4()") @fdc_generated(from: "User", purpose: IMPLICIT_KEY_FIELD)
+}

@@ -15,6 +15,24 @@ from itsdangerous import URLSafeTimedSerializer, SignatureExpired
 from authlib.integrations.flask_client import OAuth
 # -----------------------------------------------
 
+# --- Firebase Admin & Firestore Setup ---
+import firebase_admin
+from firebase_admin import credentials, firestore
+
+db = None
+try:
+    if os.path.exists('firebase-key.json'):
+        if not firebase_admin._apps:
+            cred = credentials.Certificate('firebase-key.json')
+            firebase_admin.initialize_app(cred)
+        db = firestore.client()
+        print("Firebase Firestore initialized successfully!")
+    else:
+        print("firebase-key.json not found. Falling back to local memory.")
+except Exception as e:
+    print(f"Warning: Could not initialize Firebase Firestore: {e}")
+# ----------------------------------------
+
 load_dotenv()
 
 app = Flask(__name__)
@@ -36,7 +54,7 @@ app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME', 'travelsmart5151@gmail.com')
-app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD', 'umnwpqvrizzaodar') 
+app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD', 'vbuecoxlxzfnxjgi') 
 app.config['MAIL_DEFAULT_SENDER'] = (
     os.getenv('MAIL_DEFAULT_SENDER_NAME', 'TravelSmart Support'),
     os.getenv('MAIL_DEFAULT_SENDER_EMAIL', 'travelsmart5151@gmail.com')
@@ -901,12 +919,103 @@ destinations = {
 }
 
 
+# --- Database / Firestore Helper Functions ---
+def db_get_user(email):
+    """Retrieve user dictionary from Firestore, falling back to local users dict."""
+    if not email:
+        return None
+    email_key = email.strip().lower()
+    if db:
+        try:
+            doc = db.collection('users').document(email_key).get()
+            if doc.exists:
+                return doc.to_dict()
+        except Exception as e:
+            print(f"Firestore get_user error: {e}")
+    return users.get(email_key)
+
+
+def db_save_user(user_data):
+    """Save or update a user in Firestore and local dict."""
+    email_key = user_data['email'].strip().lower()
+    users[email_key] = user_data
+    if db:
+        try:
+            db.collection('users').document(email_key).set(user_data)
+        except Exception as e:
+            print(f"Firestore save_user error: {e}")
+
+
+def db_update_user_points(email, points):
+    """Update user reward points in Firestore and local dict."""
+    email_key = email.strip().lower()
+    if email_key in users:
+        users[email_key]['reward_points'] = points
+    if db:
+        try:
+            db.collection('users').document(email_key).update({'reward_points': points})
+        except Exception as e:
+            print(f"Firestore update points error: {e}")
+
+
+def db_get_user_bookings(email):
+    """Retrieve all bookings for a user from Firestore, falling back to local bookings."""
+    if not email:
+        return []
+    email_key = email.strip().lower()
+    if db:
+        try:
+            docs = db.collection('bookings').where('user_email', '==', email_key).stream()
+            user_b = [d.to_dict() for d in docs]
+            if user_b:
+                return sorted(user_b, key=lambda x: x.get('created_at', ''), reverse=True)
+        except Exception as e:
+            print(f"Firestore get_user_bookings error: {e}")
+    return [b for b in bookings if b.get('user_email') == email_key]
+
+
+def db_save_booking(booking_data):
+    """Save a booking to Firestore and local bookings list."""
+    bookings.append(booking_data)
+    if db:
+        try:
+            db.collection('bookings').document(booking_data['id']).set(booking_data)
+        except Exception as e:
+            print(f"Firestore save_booking error: {e}")
+
+
+def db_get_all_bookings():
+    """Get all bookings for admin view."""
+    if db:
+        try:
+            docs = db.collection('bookings').stream()
+            all_b = [d.to_dict() for d in docs]
+            if all_b:
+                return sorted(all_b, key=lambda x: x.get('created_at', ''), reverse=True)
+        except Exception as e:
+            print(f"Firestore get_all_bookings error: {e}")
+    return bookings
+
+
+def db_get_all_users():
+    """Get all users for admin view."""
+    all_u = users.copy()
+    if db:
+        try:
+            docs = db.collection('users').stream()
+            for d in docs:
+                all_u[d.id] = d.to_dict()
+        except Exception as e:
+            print(f"Firestore get_all_users error: {e}")
+    return all_u
+
+
 # Helper functions
 def get_user():
     """Get current logged in user"""
     email = session.get('user_email')
-    if email and email in users:
-        return users[email]
+    if email:
+        return db_get_user(email)
     return None
 
 
@@ -1028,12 +1137,16 @@ def index():
     token = request.args.get('token')
     
     if current_user:
-        user_bookings = [b for b in bookings if b['user_email'] == current_user['email']]
+        user_bookings = db_get_user_bookings(current_user['email'])
         points = current_user.get('reward_points', 0)
         level_name, _, level_max_val, points_diff, progress = get_level_info(points)
         level_max = level_max_val if level_max_val is not None else points
         points_to_next = level_max - points
     
+    admin_active = current_user and current_user.get('is_admin')
+    context_bookings = db_get_all_bookings() if admin_active else bookings
+    context_users = db_get_all_users() if admin_active else users
+
     return render_template('index.html',
                            current_user=current_user,
                            destinations=destinations,
@@ -1041,8 +1154,8 @@ def index():
                            search_query=search_query,
                            search_result=search_result,
                            user_bookings=user_bookings,
-                           all_bookings=bookings,
-                           users=users,
+                           all_bookings=context_bookings,
+                           users=context_users,
                            points=points,
                            level_name=level_name,
                            level_max=level_max,
@@ -1058,7 +1171,8 @@ def login():
     email = request.form.get('email', '').strip().lower()
     password = request.form.get('password', '')
     
-    if email in users and check_password_hash(users[email]['password'], password):
+    user = db_get_user(email)
+    if user and check_password_hash(user['password'], password):
         session['user_email'] = email
         flash('Welcome back!', 'success')
         return redirect(url_for('index'))
@@ -1087,11 +1201,11 @@ def signup():
         flash('Password must be at least 6 characters.', 'error')
         return redirect(url_for('index', section='signup'))
     
-    if email in users:
+    if db_get_user(email):
         flash('Email already registered.', 'error')
         return redirect(url_for('index', section='signup'))
     
-    users[email] = {
+    new_user = {
         'name': name,
         'email': email,
         'password': generate_password_hash(password),
@@ -1099,6 +1213,7 @@ def signup():
         'reward_points': 0,
         'created_at': datetime.now().strftime('%Y-%m-%d %H:%M')
     }
+    db_save_user(new_user)
     
     session['user_email'] = email
     flash('Account created successfully!', 'success')
@@ -1135,9 +1250,13 @@ def save_booking():
         'travel_date': travel_date,
         'created_at': datetime.now().strftime('%Y-%m-%d %H:%M')
     }
-    bookings.append(booking)
+    db_save_booking(booking)
     
-    users[user['email']]['reward_points'] += 50
+    new_points = user.get('reward_points', 0) + 50
+    db_update_user_points(user['email'], new_points)
+    
+    flash(f'Booking saved! You earned 50 points.', 'success')
+    return redirect(url_for('index', section='bookings'))
     
     flash(f'Booking saved! You earned 50 points.', 'success')
     return redirect(url_for('index', section='bookings'))
@@ -1177,7 +1296,8 @@ def forgot_password():
     if request.method == 'POST':
         email = request.form.get('email', '').strip().lower()
         
-        if email not in users:
+        user = db_get_user(email)
+        if not user:
             # Generic success message for security to prevent email enumeration
             flash('If an account exists with that email, a password reset link has been sent.', 'info')
             return redirect(url_for('index', section='login'))
@@ -1231,7 +1351,8 @@ def reset_password(token):
         flash('The password reset link is invalid or corrupted.', 'error')
         return redirect(url_for('index', section='forgot'))
     
-    if email not in users:
+    user = db_get_user(email)
+    if not user:
         flash('User account not found.', 'error')
         return redirect(url_for('index', section='forgot'))
 
@@ -1252,7 +1373,8 @@ def reset_password(token):
             return redirect(url_for('reset_password', token=token))
 
         # 2. Update Password
-        users[email]['password'] = generate_password_hash(new_password)
+        user['password'] = generate_password_hash(new_password)
+        db_save_user(user)
         flash('Your password has been successfully reset! Please log in.', 'success')
         return redirect(url_for('index', section='login'))
 
@@ -1321,12 +1443,14 @@ def auth_callback(provider):
             flash(f'Could not retrieve email from {provider}.', 'error')
             return redirect(url_for('index', section='login'))
 
+        email = email.strip().lower()
+
         # --- DATABASE LOGIC ---
         # Check if user exists, if not, create them
-        if email not in users:
-            # Create a passwordless user (or random password)
-            users[email] = {
-                'name': name,
+        user = db_get_user(email)
+        if not user:
+            new_user = {
+                'name': name or email.split('@')[0],
                 'email': email,
                 'password': generate_password_hash(str(uuid.uuid4())), # Random secure password
                 'is_admin': False,
@@ -1334,6 +1458,7 @@ def auth_callback(provider):
                 'provider': provider, # Track which provider they used
                 'created_at': datetime.now().strftime('%Y-%m-%d %H:%M')
             }
+            db_save_user(new_user)
         
         # Log the user in
         session['user_email'] = email
@@ -1347,9 +1472,9 @@ def auth_callback(provider):
 
 
 if __name__ == '__main__':
-    # Add a default admin user for testing
-    if 'admin@travelsmart.com' not in users:
-        users['admin@travelsmart.com'] = {
+    # Add a default admin user if not present
+    if not db_get_user('admin@travelsmart.com'):
+        admin_data = {
             'name': 'Admin User',
             'email': 'admin@travelsmart.com',
             'password': generate_password_hash('password'), # Default password 'password'
@@ -1357,4 +1482,5 @@ if __name__ == '__main__':
             'reward_points': 500,
             'created_at': datetime.now().strftime('%Y-%m-%d %H:%M')
         }
+        db_save_user(admin_data)
     app.run(debug=True)

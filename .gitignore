@@ -1,0 +1,10 @@
+# Firebase credentials and environment
+firebase-key.json
+*.key.json
+.env
+__pycache__/
+*.pyc
+instance/
+.idea/
+.vscode/
+node_modules/

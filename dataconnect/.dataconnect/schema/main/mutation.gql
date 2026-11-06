@@ -1,0 +1,674 @@
+extend type Mutation {
+  """
+  ✨ Insert a single `Activity` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  activity_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: Activity_Data!
+  ): Activity_KeyOutput! @fdc_generated(from: "Activity", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `Booking` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  booking_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: Booking_Data!
+  ): Booking_KeyOutput! @fdc_generated(from: "Booking", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `Expense` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  expense_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: Expense_Data!
+  ): Expense_KeyOutput! @fdc_generated(from: "Expense", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `Trip` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  trip_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: Trip_Data!
+  ): Trip_KeyOutput! @fdc_generated(from: "Trip", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `TripMember` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  tripMember_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: TripMember_Data!
+  ): TripMember_KeyOutput! @fdc_generated(from: "TripMember", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `User` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  user_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: User_Data!
+  ): User_KeyOutput! @fdc_generated(from: "User", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert `Activity` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  activity_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [Activity_Data!]!
+  ): [Activity_KeyOutput!]! @fdc_generated(from: "Activity", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `Booking` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  booking_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [Booking_Data!]!
+  ): [Booking_KeyOutput!]! @fdc_generated(from: "Booking", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `Expense` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  expense_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [Expense_Data!]!
+  ): [Expense_KeyOutput!]! @fdc_generated(from: "Expense", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `Trip` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  trip_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [Trip_Data!]!
+  ): [Trip_KeyOutput!]! @fdc_generated(from: "Trip", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `TripMember` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  tripMember_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [TripMember_Data!]!
+  ): [TripMember_KeyOutput!]! @fdc_generated(from: "TripMember", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `User` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  user_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [User_Data!]!
+  ): [User_KeyOutput!]! @fdc_generated(from: "User", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert or update a single `Activity` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Activity`.
+  """
+  activity_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: Activity_Data!
+  ): Activity_KeyOutput! @fdc_generated(from: "Activity", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `Booking` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Booking`.
+  """
+  booking_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: Booking_Data!
+  ): Booking_KeyOutput! @fdc_generated(from: "Booking", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `Expense` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Expense`.
+  """
+  expense_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: Expense_Data!
+  ): Expense_KeyOutput! @fdc_generated(from: "Expense", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `Trip` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Trip`.
+  """
+  trip_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: Trip_Data!
+  ): Trip_KeyOutput! @fdc_generated(from: "Trip", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `TripMember` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `TripMember`.
+  """
+  tripMember_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: TripMember_Data!
+  ): TripMember_KeyOutput! @fdc_generated(from: "TripMember", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `User` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `User`.
+  """
+  user_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: User_Data!
+  ): User_KeyOutput! @fdc_generated(from: "User", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update `Activity` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Activity`.
+  """
+  activity_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [Activity_Data!]!
+  ): [Activity_KeyOutput!]! @fdc_generated(from: "Activity", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update `Booking` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Booking`.
+  """
+  booking_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [Booking_Data!]!
+  ): [Booking_KeyOutput!]! @fdc_generated(from: "Booking", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update `Expense` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Expense`.
+  """
+  expense_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [Expense_Data!]!
+  ): [Expense_KeyOutput!]! @fdc_generated(from: "Expense", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update `Trip` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Trip`.
+  """
+  trip_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [Trip_Data!]!
+  ): [Trip_KeyOutput!]! @fdc_generated(from: "Trip", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update `TripMember` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `TripMember`.
+  """
+  tripMember_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [TripMember_Data!]!
+  ): [TripMember_KeyOutput!]! @fdc_generated(from: "TripMember", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update `User` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `User`.
+  """
+  user_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [User_Data!]!
+  ): [User_KeyOutput!]! @fdc_generated(from: "User", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Update a single `Activity` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `Activity` or `null` if not found.
+  """
+  activity_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Activity_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Activity_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: Activity_Data!
+  ): Activity_KeyOutput @fdc_generated(from: "Activity", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `Booking` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `Booking` or `null` if not found.
+  """
+  booking_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Booking_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Booking_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: Booking_Data!
+  ): Booking_KeyOutput @fdc_generated(from: "Booking", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `Expense` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `Expense` or `null` if not found.
+  """
+  expense_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Expense_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Expense_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: Expense_Data!
+  ): Expense_KeyOutput @fdc_generated(from: "Expense", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `Trip` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `Trip` or `null` if not found.
+  """
+  trip_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Trip_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Trip_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: Trip_Data!
+  ): Trip_KeyOutput @fdc_generated(from: "Trip", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `TripMember` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `TripMember` or `null` if not found.
+  """
+  tripMember_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: TripMember_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: TripMember_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: TripMember_Data!
+  ): TripMember_KeyOutput @fdc_generated(from: "TripMember", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `User` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `User` or `null` if not found.
+  """
+  user_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: User_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: User_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: User_Data!
+  ): User_KeyOutput @fdc_generated(from: "User", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update `Activity` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  activity_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: Activity_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: Activity_Data!
+  ): Int! @fdc_generated(from: "Activity", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `Booking` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  booking_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: Booking_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: Booking_Data!
+  ): Int! @fdc_generated(from: "Booking", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `Expense` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  expense_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: Expense_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: Expense_Data!
+  ): Int! @fdc_generated(from: "Expense", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `Trip` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  trip_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: Trip_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: Trip_Data!
+  ): Int! @fdc_generated(from: "Trip", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `TripMember` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  tripMember_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: TripMember_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: TripMember_Data!
+  ): Int! @fdc_generated(from: "TripMember", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `User` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  user_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: User_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: User_Data!
+  ): Int! @fdc_generated(from: "User", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Delete a single `Activity` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  activity_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Activity_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Activity_FirstRow
+  ): Activity_KeyOutput @fdc_generated(from: "Activity", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `Booking` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  booking_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Booking_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Booking_FirstRow
+  ): Booking_KeyOutput @fdc_generated(from: "Booking", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `Expense` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  expense_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Expense_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Expense_FirstRow
+  ): Expense_KeyOutput @fdc_generated(from: "Expense", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `Trip` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  trip_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Trip_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Trip_FirstRow
+  ): Trip_KeyOutput @fdc_generated(from: "Trip", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `TripMember` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  tripMember_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: TripMember_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: TripMember_FirstRow
+  ): TripMember_KeyOutput @fdc_generated(from: "TripMember", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `User` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  user_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: User_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: User_FirstRow
+  ): User_KeyOutput @fdc_generated(from: "User", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete `Activity` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  activity_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: Activity_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "Activity", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `Booking` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  booking_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: Booking_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "Booking", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `Expense` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  expense_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: Expense_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "Expense", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `Trip` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  trip_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: Trip_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "Trip", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `TripMember` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  tripMember_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: TripMember_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "TripMember", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `User` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  user_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: User_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "User", purpose: DELETE_MULTIPLE)
+}

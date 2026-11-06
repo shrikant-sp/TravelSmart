@@ -1,0 +1,320 @@
+extend type Query {
+  """
+  ✨ Look up a single `Activity` based on `id`, `key` or `first` and return selected fields (or `null` if not found).
+  """
+  activity(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Activity_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Activity_FirstRow
+  ): Activity @fdc_generated(from: "Activity", purpose: QUERY_SINGLE)
+  """
+  ✨ Look up a single `Booking` based on `id`, `key` or `first` and return selected fields (or `null` if not found).
+  """
+  booking(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Booking_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Booking_FirstRow
+  ): Booking @fdc_generated(from: "Booking", purpose: QUERY_SINGLE)
+  """
+  ✨ Look up a single `Expense` based on `id`, `key` or `first` and return selected fields (or `null` if not found).
+  """
+  expense(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Expense_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Expense_FirstRow
+  ): Expense @fdc_generated(from: "Expense", purpose: QUERY_SINGLE)
+  """
+  ✨ Look up a single `Trip` based on `id`, `key` or `first` and return selected fields (or `null` if not found).
+  """
+  trip(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Trip_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Trip_FirstRow
+  ): Trip @fdc_generated(from: "Trip", purpose: QUERY_SINGLE)
+  """
+  ✨ Look up a single `TripMember` based on `id`, `key` or `first` and return selected fields (or `null` if not found).
+  """
+  tripMember(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: TripMember_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: TripMember_FirstRow
+  ): TripMember @fdc_generated(from: "TripMember", purpose: QUERY_SINGLE)
+  """
+  ✨ Look up a single `User` based on `id`, `key` or `first` and return selected fields (or `null` if not found).
+  """
+  user(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: User_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: User_FirstRow
+  ): User @fdc_generated(from: "User", purpose: QUERY_SINGLE)
+  """
+  ✨ List `Activity` objects in the table and return selected fields, optionally filtered by `where` conditions
+  """
+  activities(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: Activity_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [Activity_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: Activity_Having
+  ): [Activity!]! @fdc_generated(from: "Activity", purpose: QUERY_MULTIPLE)
+  """
+  ✨ List `Booking` objects in the table and return selected fields, optionally filtered by `where` conditions
+  """
+  bookings(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: Booking_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [Booking_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: Booking_Having
+  ): [Booking!]! @fdc_generated(from: "Booking", purpose: QUERY_MULTIPLE)
+  """
+  ✨ List `Expense` objects in the table and return selected fields, optionally filtered by `where` conditions
+  """
+  expenses(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: Expense_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [Expense_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: Expense_Having
+  ): [Expense!]! @fdc_generated(from: "Expense", purpose: QUERY_MULTIPLE)
+  """
+  ✨ List `Trip` objects in the table and return selected fields, optionally filtered by `where` conditions
+  """
+  trips(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: Trip_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [Trip_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: Trip_Having
+  ): [Trip!]! @fdc_generated(from: "Trip", purpose: QUERY_MULTIPLE)
+  """
+  ✨ List `TripMember` objects in the table and return selected fields, optionally filtered by `where` conditions
+  """
+  tripMembers(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: TripMember_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [TripMember_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: TripMember_Having
+  ): [TripMember!]! @fdc_generated(from: "TripMember", purpose: QUERY_MULTIPLE)
+  """
+  ✨ List `User` objects in the table and return selected fields, optionally filtered by `where` conditions
+  """
+  users(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: User_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [User_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: User_Having
+  ): [User!]! @fdc_generated(from: "User", purpose: QUERY_MULTIPLE)
+}

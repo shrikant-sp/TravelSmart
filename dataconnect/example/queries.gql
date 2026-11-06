@@ -1,0 +1,154 @@
+mutation CreateUser @auth(level: USER) {
+  user_insert(data: {id_expr: "auth.uid", email: "test@example.com", username: "tester"})
+}
+
+mutation UpdateUser @auth(level: USER) {
+  user_update(key: {id_expr: "auth.uid"}, data: {username: "new_username"})
+}
+
+mutation DeleteUser @auth(level: USER) {
+  user_delete(key: {id_expr: "auth.uid"})
+}
+
+query GetUser @auth(level: USER) {
+  user(key: {id_expr: "auth.uid"}) {
+    email
+    username
+  }
+}
+
+query ListUsers @auth(level: PUBLIC, insecureReason: "Public user directory") {
+  users {
+    username
+  }
+}
+
+mutation CreateTrip @auth(level: USER) {
+  trip_insert(data: {title: "Vacation", startDate: "2025-01-01", endDate: "2025-01-07", ownerId_expr: "auth.uid"})
+}
+
+mutation UpdateTrip @auth(level: USER) {
+  trip_update(key: {id: "00000000-0000-0000-0000-000000000000"}, data: {destinationCity: "Paris"})
+}
+
+mutation DeleteTrip @auth(level: USER) {
+  trip_delete(key: {id: "00000000-0000-0000-0000-000000000000"})
+}
+
+query GetTrip @auth(level: USER) {
+  trip(id: "00000000-0000-0000-0000-000000000000") {
+    title
+    owner { username }
+  }
+}
+
+query ListMyTrips @auth(level: USER) {
+  trips(where: {ownerId: {eq_expr: "auth.uid"}}) {
+    title
+  }
+}
+
+mutation CreateBooking @auth(level: USER) {
+  booking_insert(data: {type: "Flight", providerName: "Airline", checkInOrDepartureTime: "2025-01-01T10:00:00Z", tripId: "00000000-0000-0000-0000-000000000000"})
+}
+
+mutation UpdateBooking @auth(level: USER) {
+  booking_update(id: "00000000-0000-0000-0000-000000000000", data: {cost: 500.0})
+}
+
+mutation DeleteBooking @auth(level: USER) {
+  booking_delete(id: "00000000-0000-0000-0000-000000000000")
+}
+
+query GetBooking @auth(level: USER) {
+  booking(id: "00000000-0000-0000-0000-000000000000") {
+    providerName
+    cost
+  }
+}
+
+query ListBookings @auth(level: USER) {
+  bookings(where: {trip: {ownerId: {eq_expr: "auth.uid"}}}) {
+    type
+    providerName
+  }
+}
+
+mutation CreateActivity @auth(level: USER) {
+  activity_insert(data: {title: "Museum", startTime: "2025-01-02T09:00:00Z", endTime: "2025-01-02T12:00:00Z", tripId: "00000000-0000-0000-0000-000000000000"})
+}
+
+mutation UpdateActivity @auth(level: USER) {
+  activity_update(id: "00000000-0000-0000-0000-000000000000", data: {description: "Guided tour"})
+}
+
+mutation DeleteActivity @auth(level: USER) {
+  activity_delete(id: "00000000-0000-0000-0000-000000000000")
+}
+
+query GetActivity @auth(level: USER) {
+  activity(id: "00000000-0000-0000-0000-000000000000") {
+    title
+    startTime
+  }
+}
+
+query ListActivities @auth(level: USER) {
+  activities(where: {trip: {ownerId: {eq_expr: "auth.uid"}}}) {
+    title
+    locationName
+  }
+}
+
+mutation CreateExpense @auth(level: USER) {
+  expense_insert(data: {amount: 20.0, category: "Food", tripId: "00000000-0000-0000-0000-000000000000", payerId_expr: "auth.uid"})
+}
+
+mutation UpdateExpense @auth(level: USER) {
+  expense_update(id: "00000000-0000-0000-0000-000000000000", data: {notes: "Lunch"})
+}
+
+mutation DeleteExpense @auth(level: USER) {
+  expense_delete(id: "00000000-0000-0000-0000-000000000000")
+}
+
+query GetExpense @auth(level: USER) {
+  expense(id: "00000000-0000-0000-0000-000000000000") {
+    amount
+    category
+  }
+}
+
+query ListExpenses @auth(level: USER) {
+  expenses(where: {trip: {ownerId: {eq_expr: "auth.uid"}}}) {
+    amount
+    category
+    payer { username }
+  }
+}
+
+mutation CreateTripMember @auth(level: USER) {
+  tripMember_insert(data: {tripId: "00000000-0000-0000-0000-000000000000", userId_expr: "auth.uid", role: "admin"})
+}
+
+mutation UpdateTripMember @auth(level: USER) {
+  tripMember_update(id: "00000000-0000-0000-0000-000000000000", data: {role: "editor"})
+}
+
+mutation DeleteTripMember @auth(level: USER) {
+  tripMember_delete(id: "00000000-0000-0000-0000-000000000000")
+}
+
+query GetTripMember @auth(level: USER) {
+  tripMember(id: "00000000-0000-0000-0000-000000000000") {
+    role
+    user { username }
+  }
+}
+
+query ListTripMembers @auth(level: USER) {
+  tripMembers(where: {trip: {ownerId: {eq_expr: "auth.uid"}}}) {
+    role
+    user { username }
+  }
+}

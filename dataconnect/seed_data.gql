@@ -1,0 +1,32 @@
+mutation SeedDatabase @transaction {
+  user_insertMany(data: [
+    { email: "alice@example.com", username: "alice" },
+    { email: "bob@example.com", username: "bob" },
+    { email: "charlie@example.com", username: "charlie" }
+  ])
+  trip_insertMany(data: [
+    { title: "Summer Paris", startDate: "2024-06-01", endDate: "2024-06-10", owner: { id: "00000000-0000-0000-0000-000000000001" }, destinationCity: "Paris", budgetLimit: 2000.0 },
+    { title: "Tokyo Food Tour", startDate: "2024-10-15", endDate: "2024-10-25", owner: { id: "00000000-0000-0000-0000-000000000002" }, destinationCity: "Tokyo", budgetLimit: 3500.0 },
+    { title: "Mountain Hike", startDate: "2024-08-01", endDate: "2024-08-05", owner: { id: "00000000-0000-0000-0000-000000000003" }, destinationCity: "Denver", budgetLimit: 1000.0 }
+  ])
+  booking_insertMany(data: [
+    { type: "Flight", providerName: "Delta", checkInOrDepartureTime: "2024-06-01T10:00:00Z", trip: { id: "00000000-0000-0000-0000-000000000001" }, confirmationNumber: "DL123", cost: 500.0 },
+    { type: "Hotel", providerName: "Marriott", checkInOrDepartureTime: "2024-06-02T15:00:00Z", trip: { id: "00000000-0000-0000-0000-000000000001" }, confirmationNumber: "MR456", cost: 1200.0 },
+    { type: "Flight", providerName: "ANA", checkInOrDepartureTime: "2024-10-15T08:00:00Z", trip: { id: "00000000-0000-0000-0000-000000000002" }, confirmationNumber: "ANA999", cost: 1200.0 }
+  ])
+  activity_insertMany(data: [
+    { title: "Eiffel Tower", startTime: "2024-06-02T10:00:00Z", endTime: "2024-06-02T12:00:00Z", trip: { id: "00000000-0000-0000-0000-000000000001" }, description: "Visit the tower", locationName: "Eiffel Tower" },
+    { title: "Sushi Dinner", startTime: "2024-10-16T19:00:00Z", endTime: "2024-10-16T21:00:00Z", trip: { id: "00000000-0000-0000-0000-000000000002" }, description: "High end sushi", locationName: "Ginza" },
+    { title: "Hike start", startTime: "2024-08-02T06:00:00Z", endTime: "2024-08-02T14:00:00Z", trip: { id: "00000000-0000-0000-0000-000000000003" }, description: "Long trail", locationName: "Rocky Mountains" }
+  ])
+  expense_insertMany(data: [
+    { amount: 50.0, category: "Food", trip: { id: "00000000-0000-0000-0000-000000000001" }, payer: { id: "00000000-0000-0000-0000-000000000001" }, notes: "Lunch" },
+    { amount: 15.0, category: "Transport", trip: { id: "00000000-0000-0000-0000-000000000002" }, payer: { id: "00000000-0000-0000-0000-000000000002" }, notes: "Subway" },
+    { amount: 200.0, category: "Shopping", trip: { id: "00000000-0000-0000-0000-000000000003" }, payer: { id: "00000000-0000-0000-0000-000000000003" }, notes: "Hiking gear" }
+  ])
+  tripMember_insertMany(data: [
+    { trip: { id: "00000000-0000-0000-0000-000000000001" }, user: { id: "00000000-0000-0000-0000-000000000001" }, role: "Owner" },
+    { trip: { id: "00000000-0000-0000-0000-000000000002" }, user: { id: "00000000-0000-0000-0000-000000000002" }, role: "Owner" },
+    { trip: { id: "00000000-0000-0000-0000-000000000003" }, user: { id: "00000000-0000-0000-0000-000000000003" }, role: "Owner" }
+  ])
+}
