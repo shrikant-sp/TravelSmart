@@ -16,19 +16,41 @@ from authlib.integrations.flask_client import OAuth
 # -----------------------------------------------
 
 # --- Firebase Admin & Firestore Setup ---
+import json
 import firebase_admin
 from firebase_admin import credentials, firestore
 
 db = None
 try:
-    if os.path.exists('firebase-key.json'):
+    cred = None
+    # 1. Check if raw JSON string is provided in environment variable (Render environment variable standard)
+    firebase_json_env = os.getenv('FIREBASE_CREDENTIALS_JSON')
+    if firebase_json_env:
+        try:
+            cred_dict = json.loads(firebase_json_env)
+            cred = credentials.Certificate(cred_dict)
+        except Exception as err:
+            print(f"Error parsing FIREBASE_CREDENTIALS_JSON: {err}")
+
+    # 2. Check for Render Secret Files or local file paths
+    if not cred:
+        candidate_paths = [
+            os.getenv('FIREBASE_CREDENTIALS_PATH', ''),
+            'firebase-key.json',
+            '/etc/secrets/firebase-key.json',  # Default Render secret files mount path
+        ]
+        for candidate_path in candidate_paths:
+            if candidate_path and os.path.exists(candidate_path):
+                cred = credentials.Certificate(candidate_path)
+                break
+
+    if cred:
         if not firebase_admin._apps:
-            cred = credentials.Certificate('firebase-key.json')
             firebase_admin.initialize_app(cred)
         db = firestore.client()
         print("Firebase Firestore initialized successfully!")
     else:
-        print("firebase-key.json not found. Falling back to local memory.")
+        print("Firebase credentials not found. Falling back to local memory.")
 except Exception as e:
     print(f"Warning: Could not initialize Firebase Firestore: {e}")
 # ----------------------------------------
