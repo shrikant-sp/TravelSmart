@@ -5,6 +5,7 @@ from functools import wraps
 from datetime import datetime
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
 
 # --- Imports for Forgot Password Feature ---
@@ -95,7 +96,16 @@ oauth = OAuth(app)
 # --------------------------------------------
 
 # In-memory data stores
-users = {}
+users = {
+    'admin@travelsmart.com': {
+        'name': 'Admin User',
+        'email': 'admin@travelsmart.com',
+        'password': generate_password_hash('password'),
+        'is_admin': True,
+        'reward_points': 500,
+        'created_at': '2026-01-01 00:00'
+    }
+}
 bookings = []
 
 # Seed destinations - State-wise Indian destinations
@@ -1032,6 +1042,51 @@ def db_get_all_users():
     return all_u
 
 
+def db_save_destination(dest_key, dest_data):
+    """Save destination to Firestore if available."""
+    if db:
+        try:
+            db.collection('destinations').document(str(dest_key).lower()).set(dest_data, merge=True, timeout=5.0)
+        except Exception as e:
+            print(f"Firestore save destination error: {e}")
+
+
+_destinations_loaded = False
+
+
+def db_load_custom_destinations():
+    """Load customized destinations from Firestore into in-memory destinations dict."""
+    global _destinations_loaded
+    if db and not _destinations_loaded:
+        _destinations_loaded = True
+        try:
+            docs = db.collection('destinations').stream(timeout=4.0)
+            count = 0
+            for doc in docs:
+                data = doc.to_dict()
+                key = doc.id
+                if key in destinations:
+                    destinations[key].update(data)
+                else:
+                    destinations[key] = data
+                count += 1
+            if count > 0:
+                print(f"Loaded {count} custom destination(s) from Firestore.")
+        except Exception as e:
+            print(f"Firestore load destinations error: {e}")
+
+
+def init_default_admin():
+    """Ensure default admin user exists."""
+    try:
+        if db:
+            existing = db.collection('users').document('admin@travelsmart.com').get(timeout=3.0)
+            if not existing.exists:
+                db.collection('users').document('admin@travelsmart.com').set(users['admin@travelsmart.com'])
+    except Exception as e:
+        print(f"Admin init error: {e}")
+
+
 # Helper functions
 def get_user():
     """Get current logged in user"""
@@ -1129,6 +1184,7 @@ def get_all_states():
 @app.route('/')
 def index():
     """Main page - serves the single page application"""
+    db_load_custom_destinations()
     search_query = request.args.get('search', '').strip()
     section = request.args.get('section', 'home')
     search_result = None
@@ -1279,9 +1335,86 @@ def save_booking():
     
     flash(f'Booking saved! You earned 50 points.', 'success')
     return redirect(url_for('index', section='bookings'))
-    
-    flash(f'Booking saved! You earned 50 points.', 'success')
-    return redirect(url_for('index', section='bookings'))
+
+
+@app.route('/admin/destination/edit', methods=['POST'])
+@admin_required
+def admin_edit_destination():
+    """Admin route to edit a destination's name, description, photo, and state"""
+    dest_key = request.form.get('key', '').strip()
+    name = request.form.get('name', '').strip()
+    description = request.form.get('description', '').strip()
+    state = request.form.get('state', '').strip()
+    image_url = request.form.get('image_url', '').strip()
+    return_section = request.form.get('return_section', 'admin').strip()
+
+    if not dest_key:
+        flash('Invalid destination specified.', 'error')
+        return redirect(url_for('index', section=return_section))
+
+    # Match destination key (exact or case-insensitive)
+    matched_key = None
+    if dest_key in destinations:
+        matched_key = dest_key
+    else:
+        for k in destinations:
+            if k.lower() == dest_key.lower():
+                matched_key = k
+                break
+
+    if not matched_key:
+        flash(f'Destination "{dest_key}" not found.', 'error')
+        return redirect(url_for('index', section=return_section))
+
+    dest_data = destinations[matched_key].copy()
+
+    # Handle file upload if present
+    file = request.files.get('image_file')
+    if file and file.filename:
+        filename = secure_filename(file.filename)
+        ext = filename.rsplit('.', 1)[-1].lower() if '.' in filename else ''
+        if ext in {'png', 'jpg', 'jpeg', 'webp', 'gif', 'svg'}:
+            upload_dir = os.path.join(app.root_path, 'static', 'uploads')
+            os.makedirs(upload_dir, exist_ok=True)
+            unique_filename = f"dest_{matched_key}_{uuid.uuid4().hex[:8]}.{ext}"
+            file_path = os.path.join(upload_dir, unique_filename)
+            file.save(file_path)
+            image_url = url_for('static', filename=f'uploads/{unique_filename}')
+
+    # Update destination fields
+    if name:
+        dest_data['name'] = name
+    if description:
+        dest_data['description'] = description
+    if image_url:
+        dest_data['image_url'] = image_url
+    if state:
+        dest_data['state'] = state
+
+    dest_data['updated_at'] = datetime.now().strftime('%Y-%m-%d %H:%M')
+    destinations[matched_key] = dest_data
+
+    # Persist in Firestore
+    db_save_destination(matched_key, dest_data)
+
+    flash(f'Destination "{dest_data.get("name")}" updated successfully!', 'success')
+
+    if request.is_json:
+        return jsonify({'success': True, 'destination': dest_data})
+
+    return redirect(url_for('index', section=return_section))
+
+
+@app.route('/api/destination/<key>')
+def api_get_destination(key):
+    """API endpoint to get a single destination by key"""
+    key_clean = key.strip().lower()
+    if key_clean in destinations:
+        return jsonify(destinations[key_clean])
+    for k, v in destinations.items():
+        if k.lower() == key_clean:
+            return jsonify(v)
+    return jsonify({'error': 'Destination not found'}), 404
 
 
 @app.route('/api/search')
