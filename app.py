@@ -1,4 +1,5 @@
 import os
+import re
 import uuid
 import requests
 from functools import wraps
@@ -1401,6 +1402,95 @@ def admin_edit_destination():
 
     if request.is_json:
         return jsonify({'success': True, 'destination': dest_data})
+
+    return redirect(url_for('index', section=return_section))
+
+
+@app.route('/admin/destination/add', methods=['POST'])
+@admin_required
+def admin_add_destination():
+    """Admin route to add a new destination"""
+    name = request.form.get('name', '').strip()
+    description = request.form.get('description', '').strip()
+    state = request.form.get('state', '').strip() or 'Incredible India'
+    image_url = request.form.get('image_url', '').strip()
+    return_section = request.form.get('return_section', 'admin').strip()
+
+    if not name:
+        flash('Destination name is required.', 'error')
+        return redirect(url_for('index', section=return_section))
+
+    if not description:
+        flash('Destination description is required.', 'error')
+        return redirect(url_for('index', section=return_section))
+
+    # Generate key from destination name
+    base_key = re.sub(r'[^a-z0-9]+', '_', name.lower()).strip('_')
+    if not base_key:
+        base_key = f"dest_{uuid.uuid4().hex[:6]}"
+
+    dest_key = base_key
+    counter = 1
+    while dest_key in destinations:
+        dest_key = f"{base_key}_{counter}"
+        counter += 1
+
+    # Handle file upload if present
+    file = request.files.get('image_file')
+    if file and file.filename:
+        filename = secure_filename(file.filename)
+        ext = filename.rsplit('.', 1)[-1].lower() if '.' in filename else ''
+        if ext in {'png', 'jpg', 'jpeg', 'webp', 'gif', 'svg'}:
+            upload_dir = os.path.join(app.root_path, 'static', 'uploads')
+            os.makedirs(upload_dir, exist_ok=True)
+            unique_filename = f"dest_{dest_key}_{uuid.uuid4().hex[:8]}.{ext}"
+            file_path = os.path.join(upload_dir, unique_filename)
+            file.save(file_path)
+            image_url = url_for('static', filename=f'uploads/{unique_filename}')
+
+    if not image_url:
+        image_url = 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600'
+
+    new_dest = {
+        'name': name,
+        'state': state,
+        'description': description,
+        'image_url': image_url,
+        'source': 'admin',
+        'created_at': datetime.now().strftime('%Y-%m-%d %H:%M')
+    }
+
+    destinations[dest_key] = new_dest
+
+    # Persist in Firestore
+    db_save_destination(dest_key, new_dest)
+
+    flash(f'New destination "{name}" added successfully!', 'success')
+
+    if request.is_json:
+        return jsonify({'success': True, 'key': dest_key, 'destination': new_dest})
+
+    return redirect(url_for('index', section=return_section))
+
+
+@app.route('/admin/destination/delete', methods=['POST'])
+@admin_required
+def admin_delete_destination():
+    """Admin route to remove a destination"""
+    dest_key = request.form.get('key', '').strip()
+    return_section = request.form.get('return_section', 'admin').strip()
+
+    if dest_key in destinations:
+        name = destinations[dest_key].get('name', dest_key)
+        del destinations[dest_key]
+        if db:
+            try:
+                db.collection('destinations').document(dest_key.lower()).delete()
+            except Exception as e:
+                print(f"Firestore delete error: {e}")
+        flash(f'Destination "{name}" was removed successfully.', 'info')
+    else:
+        flash('Destination not found.', 'error')
 
     return redirect(url_for('index', section=return_section))
 
