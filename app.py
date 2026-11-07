@@ -4,7 +4,7 @@ import uuid
 import requests
 from functools import wraps
 from datetime import datetime
-from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, send_from_directory
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
@@ -1180,6 +1180,13 @@ def get_all_states():
         if dest.get('state') and dest['state'] != 'External':
             states.add(dest['state'])
     return sorted(list(states))
+
+
+@app.route('/favicon.ico')
+def favicon():
+    """Serve favicon directly to browsers requesting /favicon.ico"""
+    return send_from_directory(os.path.join(app.root_path, 'static'),
+                               'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 
 @app.route('/')
